@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferreteria el pajarito| Cotizador</title>
+    <style>
+        :root {
+            --primary: #1e293b; 
+            --accent: #f97316;  
+            --bg: #f1f5f9;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg); color: var(--primary); }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 5%;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        /* Grid de productos */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        .img-container { width: 100%; height: 200px; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .content { padding: 15px; flex-grow: 1; }
+        .name { font-size: 1rem; font-weight: 700; margin-bottom: 10px; min-height: 40px; }
+        .price { font-size: 1.3rem; font-weight: 800; color: #000; }
+
+        .buy-btn {
+            display: block;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .buy-btn:hover { background: var(--accent); }
+
+        /* ESTILOS DEL MODAL (VENTANA EMERGENTE) */
+        #modalCotizar {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white; 
+            padding: 30px; 
+            border-radius: 8px; 
+            width: 90%; 
+            max-width: 400px; 
+            position: relative;
+        }
+
+        .cerrar {
+            position: absolute; top: 10px; right: 15px; 
+            cursor: pointer; font-size: 24px; font-weight: bold; color: #666;
+        }
+
+        form input, form textarea {
+            width: 100%; padding: 10px; margin-top: 10px;
+            border: 1px solid #ccc; border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>FERRETERÍA EL PAJARITO🐤</h1>
+</header>
+
+<div class="container">
+    <div class="grid" id="main-grid"></div>
+</div>
+
+<!-- VENTANA EMERGENTE -->
+<div id="modalCotizar">
+    <div class="modal-content">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+        <h3 style="margin-bottom:10px;">Cotizar Producto</h3>
+        <p id="productoNombre" style="color:var(--accent); font-weight:bold; margin-bottom:15px;"></p>
+        <form>
+            <input type="text" placeholder="Tu Nombre" required>
+            <input type="number" placeholder="Tu Número de Teléfono" required>
+            <textarea rows="4" spellcheck="false" placeholder="consultas de los productos..."></textarea>
+            <button type="submit" class="buy-btn" onclick="enviarAWhatsApp()">ENVIAR COTIZACIÓN</button>
+            <button onclick="cerrar()"    style="background:#ccc; color:#333; margin-top:10px;" class="buy-btn">CANCELAR</button>
+           
+        </form>
+    </div>
+</div>
+        <script>
+            function enviarAWhatsApp() {
+                const nombre = document.querySelector('input[placeholder="Tu Nombre"]').value;
+                const telefono = document.querySelector('input[placeholder="Tu Número de Teléfono"]').value;
+                const detalles = document.querySelector('textarea').value;
+                const producto = document.getElementById('productoNombre').innerText.replace("Producto: ", "");
+                
+                const mensaje = `Hola, me gustaría cotizar el producto: ${producto}. Mi nombre es ${nombre} y mi número de teléfono es ${telefono}. Detalles adicionales: ${detalles}`;
+                const urlWhatsApp = `https://wa.me/50585661823?text=${encodeURIComponent(mensaje)}`;
+                
+                window.open(urlWhatsApp, '_blank');
+            }
+        </script>
+<script>
+    // Lista de 30 productos con imágenes reales de herramientas
+    const productos = [
+        { n: "Taladros truper", p: "1900.00", i: "taladro.webp" },
+        { n: "Martillo de Acero", p:  "00.00", i: "martillo.jpg" },
+        { n: "Sierra Circular 7\"", p: "3200.00", i: "cierra.png" },
+        { n: "Llaves Inglesas\"", p: "00.00", i: "llaves.avif" },
+        { n: "cerradura de pichel", p: "1250.00", i: "yale.webp" },
+        { n: "Cintas Métricas", p: "00.00", i: "cinta.jpg" },
+        { n: "Casco Industrial", p: "160.00", i: "casco.jpg" },
+        { n: "Gafas de Seguridad", p: "70.00", i: "gafas.jpg" },
+        { n: "Juego Destornilladores", p: "350-110.00", i: "destornillador.jpg" },
+        { n: "Guantes de Trabajo", p: "00.00", i: "guantes.webp" },
+        { n: "Serrucho Profesional truper", p: "00.00", i: "cierra.png" },
+        { n: "Nivel de Mano", p: "75.00", i: "nivel.webp" },
+        { n: "Brochas de dif Pulgadas", p: "00.00", i: "brochas.png" },
+        { n: "mangeras para compresores", p: "370-500-700.00", i: "mangera.jpg" },
+        { n: "Multímetros digitales", p: "1000-500.00", i: "multimetro.webp" },
+        { n: "Pinza de Presión", p: "250.00", i: "pinsas.webp" },
+        { n: "Cutter Industrial", p: "65-120.00", i: "cutter.jpg" },
+        { n: "Carretilla de Obra", p: "1600.00", i: "carretia.webp" },
+        { n: "Soldadora Inverter", p: "10000.00", i: "soldadora.webp" },
+        { n: "Lijadora Orbital", p: "00.00", i: "lijadora.jpg" },
+        { n: "pala doble", p: "1150.00", i: "palinn.jpg" },
+        { n: "Compresor de Aire", p: "00.00", i: "compresor.jpg" },
+        { n: "bombas para bicicletas", p: "350-190.00", i: "bomba.webp" },
+        { n: "Disco de Diamante", p: "300.00", i: "disco.webp" },
+        { n: "Llave de Tubo", p: "40-60.00", i: "llavetubo.webp" },
+        { n: "palas de diferentes estilos", p: "500-400.00", i: "palas.jpg" },
+        { n: "Cincel de Acero", p: "240.00", i: "cincel.jpg" },
+        { n: "Alicates de Corte", p: "00.00", i: "alicate.jpg" },
+        { n: "Taladro de Banco", p: "0.00", i: "banco.jpg" },
+        { n: "Botas de hule", p: "340.00", i: "botas.jpg" },
+        { n: "machete", p: "230.00", i: "machete.webp" },
+        { n: "escaleras", p: "00.00", i: "escaleras.jpg" },
+        { n: "marinolas", p: "250-120.00", i: "marinolas.jpg" },
+
+        { n: "llave para baños", p: "350-410.00", i: "baños.webp" },
+        { n: "llave de pase doble", p: "200.00", i: "llavedoble.webp" },
+        { n: "llave angular", p: "150-200.00", i: "angular.webp" },
+        { n: "extenciones electricas", p: "00.00", i: "extenciones.jpg" },
+        { n: "juego de dados magneticos", p: "310.00", i: "dados.jpg" },
+        { n: "llanas lisas y dentadas", p: "150.00", i: "llanas.webp" },
+        { n: "valvulas para cocinas", p: "240.00", i: "valvula.jpg" },
+        { n: "grapas para cables", p: "30-40-45.00", i: "grapas.jpg" },
+         { n: "cemento canal", p: "460.00", i: "cemento.webp" },
+        { n: "cantilan", p: "120-75-45.00", i: "cantilan.jpg" },
+        { n: "accesorios PVC", p: "00.00", i: "pvc.jpg" },
+         { n: "tuvos pvc", p: "00.00", i: "tubospvc.webp" },
+        { n: "cinta de fibra de vidrio truper", p: "500-430.00", i: "cintasdefibra.webp" },
+        { n: "accesorios electricos", p: "00.00", i: "electrico.jpeg" },
+        { n: "pintura modelo de agua universal", p: "1000-280.00", i: "acrilica.jpeg" },
+        { n: "pintura modelo de aceite", p: "650-250.00", i: "modeloaceite.webp" },
+        { n: "pintura sur aceite ", p: "00.00", i: "sur.png" },
+        { n: "fast dry sur", p: "1250-385.00", i: "fastdra.jpeg" },
+        { n: "barniz tinte sur", p: "1200-375.00", i: "barniztinte.jpeg" },
+         { n: "barniz tramparente", p: "1000-320.00", i: "tramparente.png" },
+        { n: "country", p: "145.00", i: "country.png" },
+        { n: "rodos para pintar", p: "60.00", i: "rodo.jpg" },
+          { n: "mangeras de chorro", p: "00.00", i: "mangeratruper.webp" },
+        { n: "tijera para podar dos manos", p: "500.00", i: "tigeras.jpg" },
+        { n: "tijera de una mano", p: "180.00", i: "tijeramano.webp" },
+         { n: "fumigador sprayer", p: "1250.00", i: "zasc.jpg" },
+        { n: "mascara para soldar", p: "900-1250.00", i: "total.jpg" },
+        { n: "clavos de toda medida", p: "00.00", i: "clavos.webp" },
+        { n: "golosos para techo", p: "00.00", i: "golosos.jpg" },
+         { n: "buhias led", p: "00.00", i: "buhias.jpg" },
+        { n: "spray AC", p: "80-95.00", i: "AC.avif" },
+        { n: "porta lampara con sensor", p: "250.00", i: "snesor.jpg" },
+         { n: "cerraduras de pomo", p: "450.00", i: "cerradura.webp" },
+        { n: "bisagras ocultas", p: "55.00", i: "bisagras.jpg" },
+         { n: "chucharas para albañiles", p: "140-150-110.00", i: "cuchara.jpg" },
+         { n: "clavos de impacto", p: "00.00", i: "impacto.jpg" },
+         { n: "gafas para soldar", p: "150.00", i: "vikingo.jpg" },
+         { n: "cepillo manual truper", p: "85.00", i: "cepillo.jpg" },
+          { n: "cepillo manual para madera", p: "1500.00", i: "cepillomadera.webp" },
+           { n: "zin liso", p: "450-530.00", i: "zin.png" },
+        { n: "maya para saranda", p: "90-85-140.00", i: "maya.webp" },
+         { n: "nailon de contruccion", p: "45-35-60-80-170.00", i: "nailon.webp" },
+         { n: "junco", p: "170.00", i: "junco.jpg" },
+         { n: "bujias abanico", p: "1000.00", i: "angel.jpg" },
+         { n: "pinceles variados", p: "45-80-110-55.00", i: "pinceles.jpg" },
+          { n: "brocas de toda medida", p: "35-25-85-140-65-95.00", i: "brocas.jpg" },
+        
+         
+    ];  
+    
+
+
+
+    const grid = document.getElementById('main-grid');
+
+    // Cargar productos al grid
+    productos.forEach(p => {
+        grid.innerHTML += `
+            <div class="card">
+                <div class="img-container">
+                    <img src="${p.i}?auto=format&fit=crop&q=80&w=400" alt="${p.n}">
+                </div>
+                <div class="content">
+                    <h3 class="name">${p.n}</h3>
+                    <p class="price">C$${p.p}</p>
+                    <button class="buy-btn" onclick="abrirCotizacion('${p.n}')">COTIZAR</button>
+                </div>
+            </div>
+        `;
+    });
+
+    // FUNCIONES DEL MODAL
+    function abrirCotizacion(nombre) {
+        document.getElementById('modalCotizar').style.display = 'flex';
+        document.getElementById('productoNombre').innerText = "Producto: " + nombre;
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalCotizar').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
